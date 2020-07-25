@@ -1,0 +1,69 @@
+html,body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+padding-top: 1em;
+text-align: center;
+background-color: black;
+/* background-image: url('../img/dungeonhell.png'); */
+background-size: cover;
+background-repeat: space;
+}
+
+h1, h2 {
+font-family: 'Press Start 2P', monospace;
+/* font-family: monospace; */
+color: goldenrod;
+}
+
+canvas {
+background-image: url('./img/background_full.jpg');
+background-repeat: repeat;
+background-size: 100% 101%;
+background-color: #222;
+width: 100%;
+}
+
+#container {
+max-width: 50em;
+max-height: 90vh;
+background-color: rgb(87, 206, 253);
+margin: 0 auto;
+padding: 1em;
+display: grid;
+grid-gap: 1em;
+grid-template-rows: .25fr .5fr .25fr;
+grid-template-columns: .25fr .5fr .25fr;
+grid-template-areas: "top top top"
+                    "game game game"
+                    "btm-left btm-center btm-right";
+}
+
+#tl, #bl, #bc, #br {
+display: flex;
+justify-content: center;
+align-items: center;
+background-color: #222;
+}
+
+main {
+    grid-area: game;
+} 
+
+#tl {
+    grid-area: top;
+}
+
+#bl {
+    grid-area: btm-left;
+}
+
+#bc {
+    grid-area: btm-center;
+}
+
+#br {
+    grid-area: btm-right;
+}
