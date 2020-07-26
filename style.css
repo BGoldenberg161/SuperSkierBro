@@ -4,48 +4,44 @@ html,body {
 }
 
 body {
-padding-top: 1em;
-text-align: center;
-background-color: black;
-/* background-image: url('../img/dungeonhell.png'); */
-background-size: cover;
-background-repeat: space;
+    padding-top: 1em;
+    text-align: center;
+    background-color: black;
 }
 
 h1, h2 {
-font-family: 'Press Start 2P', monospace;
-/* font-family: monospace; */
-color: goldenrod;
+    font-family: 'Press Start 2P', monospace;
+    color: gold;
 }
 
 canvas {
-background-image: url('./img/background_full.jpg');
-background-repeat: repeat;
-background-size: 100% 101%;
-background-color: #222;
-width: 100%;
+    background-image: url('./img/background_full.jpg');
+    background-repeat: repeat;
+    background-size: 100% 100%;
+    width: 100%;
+    background-position-x: 100px;
 }
 
 #container {
-max-width: 50em;
-max-height: 90vh;
-background-color: rgb(87, 206, 253);
-margin: 0 auto;
-padding: 1em;
-display: grid;
-grid-gap: 1em;
-grid-template-rows: .25fr .5fr .25fr;
-grid-template-columns: .25fr .5fr .25fr;
-grid-template-areas: "top top top"
-                    "game game game"
-                    "btm-left btm-center btm-right";
+    max-width: 50em;
+    max-height: 100vh;
+    background-color: rgb(87, 206, 253);
+    margin: 0 auto;
+    padding: 1em;
+    display: grid;
+    grid-gap: 1em;
+    grid-template-rows: .20fr .55fr .25fr;
+    grid-template-columns: .25fr .5fr .25fr;
+    grid-template-areas: "top top top"
+                        "game game game"
+                        "btm-left btm-center btm-right";
 }
 
 #tl, #bl, #bc, #br {
-display: flex;
-justify-content: center;
-align-items: center;
-background-color: #222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #222;
 }
 
 main {
