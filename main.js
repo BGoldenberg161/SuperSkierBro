@@ -8,7 +8,6 @@ let badGuy
 let attack = false
 let skierLocateX =[]
 let skierLocateY =[]
-let levelCount = 1
 let killCount = 0
 let backLocation = 0
 
@@ -18,9 +17,9 @@ const gameLoop = () => {
     //clear canvas
     ctx.clearRect(0, 0, game.width, game.height)
     //update displays
-    levelDisplay.textContent = `SkierBro Level: ${levelCount}\nSnowboarders resolved: ${killCount}`
+    levelDisplay.textContent = `SkierBro Level: ${skier.level} \n Haters Resolved: ${killCount}`
     healthDisplay.textContent = `Health: ${skier.health}`
-    pointsDisplay.textContent = `Points: ${skier.points}\nExp: ${skier.exp}`
+    pointsDisplay.textContent = `Points: ${skier.points} \n Exp: ${skier.exp}`
     //check if BadGuy is alive, move baddies, check for hits
     if (badGuy.health > 0) {
         badGuy.movement()
@@ -30,16 +29,16 @@ const gameLoop = () => {
     } else {
         // else spawn new baddy
         killCount += 1
-        badGuy = new Snowboarder(750, 360, Math.floor(Math.random()*40+10))
+        badGuy = new Snowboarder(750, 360)
     }
     // of baddy runs off screen spawn new baddy
     if (badGuy.x < -badGuy.width) {
-        badGuy = new Snowboarder(800, 360, Math.floor(Math.random()*40+10))
+        badGuy = new Snowboarder(800, 360)
     }
     // level up if exp > levelCap & increase levelCap
     if (skier.exp >= skier.levelCap) {
         skier.exp = skier.exp - skier.levelCap
-        levelCount++
+        skier.level++
         skier.levelCap = Math.floor(skier.levelCap * 1.5)
     }
     // render skierBro
@@ -52,6 +51,7 @@ const gameLoop = () => {
     
     // if skier dead => pop up game over screen
     if (skier.health <= 0){
+        // gameOver()
         console.log('GameOver')
     }
 }
@@ -61,7 +61,7 @@ const detectHit = () => {
         skier.y + skier.height > badGuy.y && 
         skier.x + skier.width > badGuy.x &&
         skier.x < badGuy.x + badGuy.width) {
-        doDamage()
+        doDamage(1)
      }
 }
 
@@ -142,14 +142,15 @@ function attackForward() {
     }
 }
 
-function doDamage() {
-    skier.health = skier.health - 1
+function doDamage(damage) {
+    skier.health = skier.health - damage
 }
 
 function Skier(x, y) {
     this.x = x
     this.y = y
     this.health = 100
+    this.level = 1
     this.points = 0
     this.width = 50
     this.height = 50
@@ -162,10 +163,10 @@ function Skier(x, y) {
         ctx.fillRect(this.x, this.y, this.width, this.height)
     }
 }
-function Snowboarder(x, y, exp) {
+function Snowboarder(x, y) {
     this.x = x
     this.y = y
-    this.value = exp
+    this.value = Math.floor(Math.random() * 40 + 10)
     this.health = 50
     this.width = 40
     this.height = 40
@@ -178,10 +179,10 @@ function Snowboarder(x, y, exp) {
         this.x = this.x - Math.floor(Math.random() * 15)
     }
 }
-function SkiPatrol(x, y, exp) {
+function SkiPatrol(x, y) {
     this.x = x
     this.y = y
-    this.value = exp
+    this.value = Math.floor(Math.random() * 75 + 25)
     this.health = 100
     this.width = 40
     this.height = 40
@@ -205,6 +206,35 @@ function SkiPatrol(x, y, exp) {
         }
        
     }
+}
+
+// game over function 
+function gameOver() {
+    // clear board
+    ctx.clearRect(0, 0, game.width, game.height)
+    let GameOverBlock = document.createElement('div')
+    GameOverBlock.classList.add('gameOver')
+    // message game over
+    let GameOverMsg = document.createElement('h2')
+    GameOverMsg.textContent('GAME OVER')
+    GameOverBlock.appendChild(GameOverMsg)
+    // current level, talk smack
+    let gameStats = document.createElement('p')
+    gameStats.classList.add('stats')
+    gameStats.textContent(`You made it to level ${skier.level}! \n True skiers: lvl 20+`)
+    GameOverBlock.appendChild(gameStats)
+    // restart button
+    let restart = document.createElement('button')
+    restart.classList.add('restart')
+    restart.setAttribute('type', 'reset')
+    GameOverBlock.appendChild(restart)
+
+
+    ctx.appendChild(GameOverBlock)
+
+
+    
+
 }
 
 
