@@ -12,9 +12,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let ctx = game.getContext('2d')
     //bring in characters
     let skier = new Skier(325, 250)
-    let badGuy = new Snowboarder(800, 275)
+    let badGuy = new Snowboarder(800, 275, Math.random()*15+5)
     
     // game variables
+    let badGuy2 = new SkiPatrol(800, 275, 0)
+    badGuy.health = 0
     let gravity = 4
     let killCount = 0
     let backLocation = 0
@@ -41,11 +43,21 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             // else spawn new baddy
             killCount += 1
-            badGuy = new Snowboarder(700 + Math.floor(Math.random() * 400), 275)
+            badGuy = new Snowboarder(700 + Math.floor(Math.random() * 400), 275, Math.random()*20+5)
         }
         // of baddy runs off screen spawn new baddy
         if (badGuy.x < -badGuy.width) {
-            badGuy = new Snowboarder(800, 275)
+            badGuy = new Snowboarder(800, 275, Math.random()*20+5)
+        }
+        // add skiPatrol if over level 5
+        if (skier.level > 2 && badGuy2.health > 0) {
+            badGuy2.movement()
+            badGuy2.render()
+            badGuy2.detectJumpAttack()
+            badGuy2.detectHit()
+        } else if (skier.level > 2) {
+            killCount += 1
+            badGuy2 = new SkiPatrol(550, 275, Math.random()*10+5)
         }
         // level up if exp > levelCap & increase levelCap
         if (skier.exp >= skier.levelCap) {
@@ -157,12 +169,12 @@ document.addEventListener('DOMContentLoaded', () => {
     //define snowboarder image
     const snowboardBro = document.createElement('img')
     snowboardBro.setAttribute('src', './img/snowboardBro_125.png')
-    function Snowboarder(x, y) {
+    function Snowboarder(x, y, speed) {
         this.x = x
         this.y = y
         this.points = 10
         this.damage = 2
-        this.value = Math.floor(Math.random() * 40 + 10)
+        this.value = Math.floor(Math.random() * speed * 2 + 10)
         this.health = 50
         this.width = 85
         this.height = 125
@@ -170,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.drawImage(snowboardBro, this.x, this.y)
         }
         this.movement = function () {
-            this.x = this.x - Math.floor(Math.random() * 15)
+            this.x = this.x - speed
         }
         this.detectHit = () => {
             if (skier.y < this.y + this.height &&
@@ -194,33 +206,47 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
-    function SkiPatrol(x, y) {
+    //define skiPatrol image
+    const skiPatrolBro = document.createElement('img')
+    skiPatrolBro.setAttribute('src', './img/skiPatrol_125.png')
+    function SkiPatrol(x, y, speed) {
         this.x = x
         this.y = y
         this.points = 25
-        this.damage = 5
-        this.value = Math.floor(Math.random() * 75 + 25)
-        this.health = 100
-        this.width = 40
-        this.height = 40
-        this.color = 'red'
-        this.moveLeft = true
+        this.damage = 3
+        this.value = Math.floor(Math.random() * speed * 2 + 50)
+        this.health = 150
+        this.width = 115
+        this.height = 125
         this.render = function () {
-            ctx.strokeRect(this.x, this.y, this.width, this.height)
+            ctx.drawImage(skiPatrolBro, this.x, this.y)
         }
         this.movement = function () {
-            if (this.x <= 20) {
-                this.moveLeft = false
-            } else if (this.x >= game.width - this.width - 20) {
-                this.moveLeft = true
-            }
-            if (this.moveLeft) {
-                this.x = this.x - Math.floor(Math.random() * 5)
-            }
-            else {
-                this.x = this.x + Math.floor(Math.random() * 5)
-            }
+            if (this.x > game.width - this.width)
+                {this.x = this.x - speed}
+            else {this.x = this.x + speed}
 
+        }
+        this.detectHit = () => {
+            if (skier.y < this.y + this.height &&
+                skier.y + skier.height > this.y &&
+                skier.x + skier.width - 40 > this.x &&
+                skier.x + 60 < this.x + this.width) {
+                doDamage(this.damage)
+            }
+        }
+        // detect attack, bounce, get points
+        this.detectJumpAttack = () => {
+            if (this.y < skier.y + skier.height &&
+                skier.y + skier.height < this.y + 25 &&
+                skier.x + skier.width - 40 > this.x &&
+                skier.x + 40 < this.x + this.width) {
+                skier.y -= 70
+                this.health -= 50
+                skier.points += this.points
+                skier.exp += this.value
+
+            }
         }
     }
 
@@ -246,14 +272,22 @@ document.addEventListener('DOMContentLoaded', () => {
         let restart = document.createElement('button')
         restart.classList.add('restart')
         restart.setAttribute('type', 'reset')
+        restart.textContent = 'Reset'
         GameOverBlock.appendChild(restart)
 
         body.appendChild(GameOverBlock)
+        //listen for click
+        restart.addEventListener('click', reset)
+    }
+    
+    function reset() {
+        location.reload()
     }
 
 // set game speed
 let runGame = setInterval(gameLoop, 60)
 //listen for key inputs
 document.addEventListener('keydown', movementHandler)
+
 
 })

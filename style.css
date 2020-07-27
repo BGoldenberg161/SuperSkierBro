@@ -5,6 +5,9 @@ html,body {
 
 body {
     padding-top: 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-align: center;
     background-color: black;
 }
@@ -66,7 +69,17 @@ main {
 }
 
 .gameOver {
+    background: #222;
+    border: 10px solid rgb(100, 0, 0);
+    border-radius: 5px;
     position: fixed;
-    top: 
-
+    top: 200px;
+    margin: 0 auto;
+}
+p {
+    color: rgb(250, 244, 233);
+    margin: 0 auto;
+}
+.restart {
+    margin: 15px;
 }
