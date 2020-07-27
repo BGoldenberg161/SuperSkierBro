@@ -12,6 +12,7 @@ body {
 h1, h2 {
     font-family: 'Press Start 2P', monospace;
     color: gold;
+    font-size: 30px;
 }
 
 canvas {
@@ -62,4 +63,10 @@ main {
 
 #br {
     grid-area: btm-right;
+}
+
+.gameOver {
+    position: fixed;
+    top: 
+
 }
