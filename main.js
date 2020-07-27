@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let gravity = 4
     let killCount = 0
     let backLocation = 0
+    let highScore = 0
+    let currentScore
 
     // game loop
     const gameLoop = () => {
@@ -252,6 +254,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // game over function 
     function gameOver() {
+        currentScore = skier.points
+        if (currentScore > highScore) {
+            highScore = currentScore
+        }
 
         // stop game loop
         clearInterval(runGame)
@@ -266,8 +272,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // current level, talk smack
         let gameStats = document.createElement('p')
         gameStats.classList.add('stats')
-        gameStats.textContent = `You made it to level ${skier.level}! \n True skiers: lvl 10+`
+        gameStats.textContent = `You made it to level ${skier.level} with ${skier.points} points!`
         GameOverBlock.appendChild(gameStats)
+        let gameStats2 = document.createElement('p')
+        gameStats2.classList.add('stats')
+        gameStats2.textContent = `High Score: ${highScore}`
+        GameOverBlock.appendChild(gameStats2)
         // restart button
         let restart = document.createElement('button')
         restart.classList.add('restart')
@@ -281,13 +291,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function reset() {
-        location.reload()
+        skier = new Skier(325, 250)
+        badGuy = new Snowboarder(800, 275, Math.random()*15+5)
+        runGame = setInterval(gameLoop, 60)
+        let StartOver = document.querySelector('.gameOver')
+        body.removeChild(StartOver)
     }
 
 // set game speed
 let runGame = setInterval(gameLoop, 60)
 //listen for key inputs
 document.addEventListener('keydown', movementHandler)
-
-
 })

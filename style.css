@@ -82,7 +82,7 @@ main {
 }
 p {
     color: rgb(250, 244, 233);
-    margin: 0 auto;
+    margin: 10px;
 }
 .restart {
     margin: 15px;
