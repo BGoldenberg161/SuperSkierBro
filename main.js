@@ -13,10 +13,9 @@ document.addEventListener('DOMContentLoaded', () => {
     //bring in characters
     let skier = new Skier(325, 250)
     let badGuy = new Snowboarder(800, 275, Math.random()*15+5)
+    let badGuy2 = new SkiPatrol(550, 275)
     
     // game variables
-    let badGuy2 = new SkiPatrol(800, 275, 0)
-    badGuy.health = 0
     let gravity = 4
     let killCount = 0
     let backLocation = 0
@@ -50,14 +49,18 @@ document.addEventListener('DOMContentLoaded', () => {
             badGuy = new Snowboarder(800, 275, Math.random()*20+5)
         }
         // add skiPatrol if over level 5
-        if (skier.level > 2 && badGuy2.health > 0) {
+        if (skier.level > 4 && badGuy2.health > 0) {
             badGuy2.movement()
             badGuy2.render()
             badGuy2.detectJumpAttack()
             badGuy2.detectHit()
-        } else if (skier.level > 2) {
+        } else if (skier.level > 4) {
             killCount += 1
-            badGuy2 = new SkiPatrol(550, 275, Math.random()*10+5)
+            badGuy2 = new SkiPatrol(600, 275)
+        }
+        // if badGuy2 runs off screen, run other way
+        if (badGuy2.x >= game.width || badGuy2.x < 10){
+            badGuy2.speed = badGuy2.speed * -1
         }
         // level up if exp > levelCap & increase levelCap
         if (skier.exp >= skier.levelCap) {
@@ -76,8 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
     //functions
     // gravity
     const gravityFun = e => {
-        if (skier.y + skier.height < game.height) gravity = gravity + .05
-        else if (skier.y + skier.height == game.height) gravity = 4
+        if (skier.y + skier.height < game.height) gravity = gravity * 1.1
+        else if (skier.y + skier.height >= game.height - 20) gravity = 4
         if (skier.y < game.height - skier.height) skier.y += gravity
     }
     // movement left/right
@@ -103,8 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         canvas.style.backgroundPosition = backLocation + 'px'
         if (skier.x >= 0) skier.x -= 2
     }
-
-
+    // skier movement
     const movementHandler = e => {
         // console.log(e.keyCode)
         switch (e.keyCode) {
@@ -134,15 +136,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // space bar attack
-    function attackForward() {
-        if (!attack) {
-            skier.width += 10
-            attack = true
-        } else {
-            skier.width -= 10
-            attack = false
-        }
-    }
+    // function attackForward() {
+    //     if (!attack) {
+    //         skier.width += 10
+    //         attack = true
+    //     } else {
+    //         skier.width -= 10
+    //         attack = false
+    //     }
+    // }
 
     function doDamage(damage) {
         skier.health = skier.health - damage
@@ -209,12 +211,13 @@ document.addEventListener('DOMContentLoaded', () => {
     //define skiPatrol image
     const skiPatrolBro = document.createElement('img')
     skiPatrolBro.setAttribute('src', './img/skiPatrol_125.png')
-    function SkiPatrol(x, y, speed) {
+    function SkiPatrol(x, y) {
         this.x = x
         this.y = y
+        this.speed = 10
         this.points = 25
         this.damage = 3
-        this.value = Math.floor(Math.random() * speed * 2 + 50)
+        this.value = 100
         this.health = 150
         this.width = 115
         this.height = 125
@@ -222,10 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.drawImage(skiPatrolBro, this.x, this.y)
         }
         this.movement = function () {
-            if (this.x > game.width - this.width)
-                {this.x = this.x - speed}
-            else {this.x = this.x + speed}
-
+            this.x = this.x + this.speed
         }
         this.detectHit = () => {
             if (skier.y < this.y + this.height &&
@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // current level, talk smack
         let gameStats = document.createElement('p')
         gameStats.classList.add('stats')
-        gameStats.textContent = `You made it to level ${skier.level}! \n True skiers: lvl 20+`
+        gameStats.textContent = `You made it to level ${skier.level}! \n True skiers: lvl 10+`
         GameOverBlock.appendChild(gameStats)
         // restart button
         let restart = document.createElement('button')
