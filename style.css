@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Nova+Cut&display=swap');
+
 html,body {
     margin: 0;
     padding: 0;
@@ -72,18 +74,41 @@ main {
     grid-area: btm-right;
 }
 
-.gameOver {
+.gameOver, .instructions {
     background: #222;
     border: 10px solid rgb(100, 0, 0);
     border-radius: 5px;
     position: fixed;
-    top: 200px;
+    top: 180px;
     margin: 0 auto;
 }
 p {
     color: rgb(250, 244, 233);
     margin: 10px;
+    font-family: 'Nova Cut', cursive;
 }
 .restart {
     margin: 15px;
+    padding: 10px;
+    width: 150px;
+    background-color: goldenrod;
+    font-family: 'Nova Cut', cursive;
+    color: rgb(250, 244, 233);
+}
+.ready {
+    margin: 15px;
+    padding: 10px;
+    width: 150px;
+    background-color: rgb(85, 189, 85);
+    font-family: 'Nova Cut', cursive;
+    color: rgb(250, 244, 233);
+}
+.pause {
+    position: absolute;
+    margin: 23px;
+    height: 30px;
+    width: 100px;
+    background-color: rgb(220, 85, 85);
+    font-family: 'Nova Cut', cursive;
+    color: rgb(250, 244, 233);
 }

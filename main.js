@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let killCount = 0
     let backLocation = 0
     let highScore = 0
-    let currentScore
+    let currentScore = 0
 
     // game loop
     const gameLoop = () => {
@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             // else spawn new baddy
             killCount += 1
+            skier.hatersResolved += 1
             badGuy = new Snowboarder(700 + Math.floor(Math.random() * 400), 275, Math.random()*20+5)
         }
         // of baddy runs off screen spawn new baddy
@@ -58,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
             badGuy2.detectHit()
         } else if (skier.level > 4) {
             killCount += 1
+            skier.hatersResolved += 1
             badGuy2 = new SkiPatrol(600, 275)
         }
         // if badGuy2 runs off screen, run other way
@@ -166,6 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
         this.accl = 0
         this.exp = 0
         this.levelCap = 50
+        this.hatersResolved = 0
         this.render = function () {
             ctx.drawImage(skierBro, this.x, this.y)
         }
@@ -255,6 +258,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // game over function 
     function gameOver() {
         currentScore = skier.points
+        currentHaters = skier.hatersResolved
+        
         if (currentScore > highScore) {
             highScore = currentScore
         }
@@ -269,20 +274,37 @@ document.addEventListener('DOMContentLoaded', () => {
         let GameOverMsg = document.createElement('h2')
         GameOverMsg.textContent = 'GAME OVER'
         GameOverBlock.appendChild(GameOverMsg)
-        // current level, talk smack
+        // give stats
         let gameStats = document.createElement('p')
         gameStats.classList.add('stats')
         gameStats.textContent = `You made it to level ${skier.level} with ${skier.points} points!`
         GameOverBlock.appendChild(gameStats)
         let gameStats2 = document.createElement('p')
         gameStats2.classList.add('stats')
-        gameStats2.textContent = `High Score: ${highScore}`
+        gameStats2.textContent = `You resolved ${currentHaters} haters this round`
         GameOverBlock.appendChild(gameStats2)
+        // tell user if new high score/talk smack if not
+        if (currentScore < highScore) {
+            let gameStats3 = document.createElement('p')
+            gameStats3.classList.add('stats')
+            gameStats3.textContent = `IF YOU AIN'T FIRST, YOU LAST`
+            GameOverBlock.appendChild(gameStats3)
+        } else if (currentScore == highScore) {
+            let gameStats3 = document.createElement('p')
+            gameStats3.classList.add('stats')
+            gameStats3.textContent = `NEW HIGH SCORE!!!`
+            GameOverBlock.appendChild(gameStats3)
+        }
+        // show high score
+        let gameStats4 = document.createElement('p')
+        gameStats4.classList.add('stats')
+        gameStats4.textContent = `High Score: ${highScore}`
+        GameOverBlock.appendChild(gameStats4)
         // restart button
         let restart = document.createElement('button')
         restart.classList.add('restart')
         restart.setAttribute('type', 'reset')
-        restart.textContent = 'Reset'
+        restart.textContent = 'Try Again?'
         GameOverBlock.appendChild(restart)
 
         body.appendChild(GameOverBlock)
@@ -291,15 +313,57 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function reset() {
+        currentHaters = 0
         skier = new Skier(325, 250)
         badGuy = new Snowboarder(800, 275, Math.random()*15+5)
         runGame = setInterval(gameLoop, 60)
         let StartOver = document.querySelector('.gameOver')
         body.removeChild(StartOver)
     }
+    // insctructions
+    function instructionsPause() {
+        // stop game loop
+        clearInterval(runGame)
+        // clear board
+        // ctx.clearRect(0, 0, game.width, game.height)
+        let instructionsBlock = document.createElement('div')
+        instructionsBlock.classList.add('instructions')
+        // message game over
+        let instructionsMsg = document.createElement('h2')
+        instructionsMsg.textContent = 'How to Play'
+        instructionsBlock.appendChild(instructionsMsg)
+        // give stats
+        let gameKeys = document.createElement('p')
+        gameKeys.classList.add('keys')
+        gameKeys.textContent = `Move with: A & D \n Jump with: W`
+        instructionsBlock.appendChild(gameKeys)
+        let gameQuote = document.createElement('p')
+        gameQuote.classList.add('quote')
+        gameQuote.textContent = `Help make the world a better place,\n take out as many haters as possible.`
+        instructionsBlock.appendChild(gameQuote)
+        // restart button
+        let start = document.createElement('button')
+        start.classList.add('ready')
+        start.setAttribute('type', 'reset')
+        start.textContent = 'Ready'
+        instructionsBlock.appendChild(start)
 
-// set game speed
+        body.appendChild(instructionsBlock)
+        //listen for click
+        start.addEventListener('click', play)
+    }
+
+    function play() {
+        let instructions = document.querySelector('.instructions')
+        body.removeChild(instructions)
+        runGame = setInterval(gameLoop, 60)
+    }
+
+// set game speed  && run game
 let runGame = setInterval(gameLoop, 60)
 //listen for key inputs
 document.addEventListener('keydown', movementHandler)
+// listen for pause button
+let pause = document.querySelector('.pause')
+pause.addEventListener('click', instructionsPause)
 })
