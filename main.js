@@ -123,12 +123,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     skier.y += 3
                 break
             case (65):// a - accelerate left 
-                if (skier.accl > -15 && skier.y >= game.height - skier.height)
+                if (skier.accl > -18 && skier.y >= game.height - skier.height)
                     skier.accl -= 3
                 // canvas.style.backgroundPositionX -= 10
                 break
             case (68):// d - accelerate right
-                if (skier.accl < 15 && skier.y >= game.height - skier.height)
+                if (skier.accl < 18 && skier.y >= game.height - skier.height)
                     skier.accl += 3
             // case (32):// space - attack
             //     attackForward()
