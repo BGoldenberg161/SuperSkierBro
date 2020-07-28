@@ -13,7 +13,11 @@ document.addEventListener('DOMContentLoaded', () => {
     //bring in characters
     let skier = new Skier(325, 250)
     let badGuy = new Snowboarder(800, 275, Math.random()*15+5)
-    let badGuy2 = new SkiPatrol(550, 275)
+    let badGuy2 = new SkiPatrol(550, 275, Math.random()*15+5)
+    // initialize music
+    let music = new Sounds('./Audio/Superman-Goldfinger.mp3')
+    const musicEle = document.querySelector('audio')
+    musicEle.volume = 0.05
     
     // game variables
     let gravity = 4
@@ -30,8 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.clearRect(0, 0, game.width, game.height)
         // if skier dead => pop up game over screen
         if (skier.health <= 0) {
+            music.stop()
             gameOver()
-            console.log('GameOver')
         }
         //update displays
         levelDisplay.innerText = `SkierBro Level: ${skier.level} \n Haters Resolved: ${killCount}`
@@ -62,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (skier.level > 4) {
             killCount += 1
             skier.hatersResolved += 1
-            badGuy2 = new SkiPatrol(600, 275)
+            badGuy2 = new SkiPatrol(600, 275, Math.random()*20+5)
         }
         // if badGuy2 runs off screen, run other way
         if (badGuy2.x >= game.width || badGuy2.x < 10){
@@ -86,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         prevHealth = currentHealth
         // render skierBro
         skier.render()
-        // run gravity and momentum
+        // run gravity  momentum  friction  background movement
         gravityFun()
         momentum()
         friction()
@@ -95,8 +99,11 @@ document.addEventListener('DOMContentLoaded', () => {
     //functions
     // gravity
     const gravityFun = e => {
+        // 'acceleration'
         if (skier.y + skier.height < game.height) gravity = gravity * 1.1
+        // if on ground reset to base gravity value
         else if (skier.y + skier.height >= game.height - 20) gravity = 4
+        // move skierBro
         if (skier.y < game.height - skier.height) skier.y += gravity
     }
     // movement left/right
@@ -166,6 +173,21 @@ document.addEventListener('DOMContentLoaded', () => {
         // remove health from skier
         skier.health = skier.health - damage
     }
+    // sounds object
+    function Sounds(src) {
+        this.sound = document.createElement('audio');
+        this.sound.src = src;
+        this.sound.setAttribute('preload', 'auto');
+        this.sound.setAttribute('controls', 'none');
+        this.sound.style.display = 'none';
+        body.appendChild(this.sound);
+        this.play = function(){
+          this.sound.play();
+        }
+        this.stop = function(){
+          this.sound.pause();
+        }
+    }
     //define skierBro image
     const skierBro = document.createElement('img')
     skierBro.setAttribute('src', './img/superSkierBro_2_150.png')
@@ -229,13 +251,13 @@ document.addEventListener('DOMContentLoaded', () => {
     //define skiPatrol image
     const skiPatrolBro = document.createElement('img')
     skiPatrolBro.setAttribute('src', './img/skiPatrol_125.png')
-    function SkiPatrol(x, y) {
+    function SkiPatrol(x, y, speed) {
         this.x = x
         this.y = y
         this.speed = 10
         this.points = 25
         this.damage = 3
-        this.value = 100
+        this.value = Math.floor(Math.random() * speed * 3 + 10)
         this.health = 150
         this.width = 115
         this.height = 125
@@ -268,20 +290,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
      // define weapon
-    //  function SkiPole(x, y) => {
-    //     this.x = x
-    //     this.y = y
-    //     this.speed = 20
-    //     this.inGame = true
-    //     this.render = function () {
-    //         ctx.drawImage(skiPatrolBro, this.x, this.y)
-    //     }
-    // }
+     function SkiPole(x, y) {
+        this.x = x
+        this.y = y
+        this.speed = 20
+        this.inGame = true
+        this.render = function () {
+            ctx.drawImage(skiPole, this.x, this.y)
+        }
+    }
     // game over function 
     function gameOver() {
+        // log variables
         currentScore = skier.points
         currentHaters = skier.hatersResolved
-        
         if (currentScore > highScore) {
             highScore = currentScore
         }
@@ -375,6 +397,7 @@ document.addEventListener('DOMContentLoaded', () => {
         //listen for click
         pause.removeEventListener('click', instructionsPause)
         start.addEventListener('click', play)
+        music.stop()
     }
 
     function play() {
@@ -382,7 +405,9 @@ document.addEventListener('DOMContentLoaded', () => {
         body.removeChild(instructions)
         pause.addEventListener('click', instructionsPause)
         runGame = setInterval(gameLoop, 60)
+        music.play()
     }
+    
 
 // set game speed  && run game
 let runGame = setInterval(gameLoop, 60)
@@ -391,4 +416,6 @@ document.addEventListener('keydown', movementHandler)
 // listen for pause button
 let pause = document.querySelector('.pause')
 pause.addEventListener('click', instructionsPause)
+// start game paused
+instructionsPause()
 })
