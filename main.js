@@ -21,6 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let backLocation = 0
     let highScore = 0
     let currentScore = 0
+    let currentHealth = 100
+    let prevHealth = 100
 
     // game loop
     const gameLoop = () => {
@@ -32,9 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('GameOver')
         }
         //update displays
-        levelDisplay.textContent = `SkierBro Level: ${skier.level} \n Haters Resolved: ${killCount}`
-        healthDisplay.textContent = `Health: \n ${skier.health}`
-        pointsDisplay.textContent = `Points: ${skier.points} \n Exp: ${skier.exp}`
+        levelDisplay.innerText = `SkierBro Level: ${skier.level} \n Haters Resolved: ${killCount}`
+        healthDisplay.innerText = `Health: \n ${skier.health}`
+        pointsDisplay.innerText = `Points: ${skier.points} \n Exp: ${skier.exp}`
         //check if BadGuy is alive, move baddies, check for hits
         if (badGuy.health > 0) {
             badGuy.movement()
@@ -72,6 +74,16 @@ document.addEventListener('DOMContentLoaded', () => {
             skier.level++
             skier.levelCap = Math.floor(skier.levelCap * 1.5)
         }
+        // check if taking damage, if so, turn red
+        currentHealth = skier.health
+        if (currentHealth < prevHealth) {
+         // turn skier red
+        skierBro.setAttribute('src', './img/superSkierBro_2_150_red.png')
+        } else {
+            // turn skier red
+        skierBro.setAttribute('src', './img/superSkierBro_2_150.png')
+        }
+        prevHealth = currentHealth
         // render skierBro
         skier.render()
         // run gravity and momentum
@@ -151,6 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // }
 
     function doDamage(damage) {
+        // remove health from skier
         skier.health = skier.health - damage
     }
     //define skierBro image
@@ -254,7 +267,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
-
+     // define weapon
+    //  function SkiPole(x, y) => {
+    //     this.x = x
+    //     this.y = y
+    //     this.speed = 20
+    //     this.inGame = true
+    //     this.render = function () {
+    //         ctx.drawImage(skiPatrolBro, this.x, this.y)
+    //     }
+    // }
     // game over function 
     function gameOver() {
         currentScore = skier.points
@@ -310,6 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
         body.appendChild(GameOverBlock)
         //listen for click
         restart.addEventListener('click', reset)
+        pause.removeEventListener('click', instructionsPause)
     }
     
     function reset() {
@@ -319,12 +342,12 @@ document.addEventListener('DOMContentLoaded', () => {
         runGame = setInterval(gameLoop, 60)
         let StartOver = document.querySelector('.gameOver')
         body.removeChild(StartOver)
+        pause.addEventListener('click', instructionsPause)
     }
     // insctructions
     function instructionsPause() {
         // stop game loop
         clearInterval(runGame)
-        // clear board
         // ctx.clearRect(0, 0, game.width, game.height)
         let instructionsBlock = document.createElement('div')
         instructionsBlock.classList.add('instructions')
@@ -335,11 +358,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // give stats
         let gameKeys = document.createElement('p')
         gameKeys.classList.add('keys')
-        gameKeys.textContent = `Move with: A & D \n Jump with: W`
+        gameKeys.innerText = 'Move with: A & D \n Jump with: W'
         instructionsBlock.appendChild(gameKeys)
         let gameQuote = document.createElement('p')
         gameQuote.classList.add('quote')
-        gameQuote.textContent = `Help make the world a better place,\n take out as many haters as possible.`
+        gameQuote.innerText = `Help make the world a better place,\n take out as many haters as possible.`
         instructionsBlock.appendChild(gameQuote)
         // restart button
         let start = document.createElement('button')
@@ -347,15 +370,17 @@ document.addEventListener('DOMContentLoaded', () => {
         start.setAttribute('type', 'reset')
         start.textContent = 'Ready'
         instructionsBlock.appendChild(start)
-
+        // append to page
         body.appendChild(instructionsBlock)
         //listen for click
+        pause.removeEventListener('click', instructionsPause)
         start.addEventListener('click', play)
     }
 
     function play() {
         let instructions = document.querySelector('.instructions')
         body.removeChild(instructions)
+        pause.addEventListener('click', instructionsPause)
         runGame = setInterval(gameLoop, 60)
     }
 
