@@ -149,10 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
             case (68):// d - accelerate right
                 if (skier.accl < 18 && skier.y >= game.height - skier.height)
                     skier.accl += 3
-            // case (32):// space - attack
-            //     attackForward()
-            //     setTimeout(attackForward, 500)
-            //     break
+            case (32):// space - attack
+                let weapon = new skiPole(skier.x + 50, skier.y + 50)
             // defalut:
             //     console.log('invalid keystroke')
         }
@@ -289,14 +287,21 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
-     // define weapon
+     //define skiPatrol image
+    const skiPole = document.createElement('img')
+    skiPole.setAttribute('src', './img/skiPole_100.png')
      function SkiPole(x, y) {
         this.x = x
         this.y = y
         this.speed = 20
+        this.width = 100
+        this.height = 20
         this.inGame = true
         this.render = function () {
             ctx.drawImage(skiPole, this.x, this.y)
+        }
+        this.movement = function () {
+            this.x = this.x - 25
         }
     }
     // game over function 
