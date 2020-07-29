@@ -42,61 +42,11 @@ document.addEventListener('DOMContentLoaded', () => {
         levelDisplay.innerText = `SkierBro Level: ${skier.level} \n Haters Resolved: ${killCount}`
         healthDisplay.innerText = `Health: \n ${skier.health}`
         pointsDisplay.innerText = `Points: ${skier.points} \n Exp: ${skier.exp}`
-        //check if BadGuy is alive, move baddies, check for hits
-        if (badGuy.health > 0) {
-            badGuy.movement()
-            badGuy.render()
-            badGuy.detectJumpAttack()
-            badGuy.detectHit()
-            badGuy.detectWeapon()
-        } else {
-            // else spawn new baddy
-            killCount += 1
-            skier.hatersResolved += 1
-            badGuy = new Snowboarder(700 + Math.floor(Math.random() * 400), 275, Math.random()*20+5)
-        }
-        // of baddy runs off screen spawn new baddy
-        if (badGuy.x < -badGuy.width) {
-            badGuy = new Snowboarder(800, 275, Math.random()*20+5)
-        }
-        // add skiPatrol if over level 5
-        if (skier.level > 4 && badGuy2.health > 0) {
-            badGuy2.movement()
-            badGuy2.render()
-            badGuy2.detectJumpAttack()
-            badGuy2.detectHit()
-            badGuy2.detectWeapon()
-        } else if (skier.level > 4) {
-            killCount += 1
-            skier.hatersResolved += 1
-            badGuy2 = new SkiPatrol(600, 275, Math.random()*20+5)
-        }
-        // if badGuy2 runs off screen, run other way
-        if (badGuy2.x >= game.width || badGuy2.x < 10){
-            badGuy2.speed = badGuy2.speed * -1
-        }
-        // level up if exp > levelCap & increase levelCap
-        if (skier.exp >= skier.levelCap) {
-            skier.exp = skier.exp - skier.levelCap
-            skier.level++
-            skier.levelCap = Math.floor(skier.levelCap * 1.5)
-        }
-        // check if taking damage, if so, turn red
-        currentHealth = skier.health
-        if (currentHealth < prevHealth) {
-         // turn skier red
-        skierBro.setAttribute('src', './img/superSkierBro_2_150_red.png')
-        } else {
-            // turn skier red
-        skierBro.setAttribute('src', './img/superSkierBro_2_150.png')
-        }
 
-        if (weapon.inGame === true) {
-            weapon.render()
-            weapon.movement()
-        }
-
-        prevHealth = currentHealth
+        badGuy.gameLoop()
+        badGuy2.gameLoop()
+        weapon.gameLoop()
+        skier.gameLoop()
         // render skierBro
         skier.render()
         // run gravity  momentum  friction  background movement
@@ -158,24 +108,15 @@ document.addEventListener('DOMContentLoaded', () => {
             case (68):// d - accelerate right
                 if (skier.accl < 18 && skier.y >= game.height - skier.height)
                     skier.accl += 3
+                break
             case (32):// space - attack
-            if (weapon.inGame = false)    
-            weapon = new SkiPole(skier.x + 50, skier.y + 50, true)
+                if (weapon.inGame === false)    
+                    weapon = new SkiPole(skier.x + 50, skier.y + Math.floor(Math.random() * 75) + 20, true)
+                break
             // defalut:
             //     console.log('invalid keystroke')
         }
     }
-
-    // space bar attack
-    // function attackForward() {
-    //     if (!attack) {
-    //         skier.width += 10
-    //         attack = true
-    //     } else {
-    //         skier.width -= 10
-    //         attack = false
-    //     }
-    // }
 
     function doDamage(damage) {
         // remove health from skier
@@ -207,13 +148,33 @@ document.addEventListener('DOMContentLoaded', () => {
         this.level = 1
         this.points = 0
         this.width = 135
-        this.height = 150
+        this.height = 155
         this.accl = 0
         this.exp = 0
         this.levelCap = 50
         this.hatersResolved = 0
         this.render = function () {
             ctx.drawImage(skierBro, this.x, this.y)
+        }
+        this.gameLoop = () => {
+            // level up if exp > levelCap & increase levelCap
+            if (skier.exp >= skier.levelCap) {
+                skier.exp = skier.exp - skier.levelCap
+                skier.level++
+                skier.levelCap = Math.floor(skier.levelCap * 1.5)
+            }
+            currentHealth = skier.health
+            // check if taking damage, if so, turn red
+            if (currentHealth < prevHealth) {
+            // turn skier red
+            skierBro.setAttribute('src', './img/superSkierBro_2_150_red.png')
+            } else {
+                // turn skier red
+            skierBro.setAttribute('src', './img/superSkierBro_2_150.png')
+            }
+
+            // track health for damage(red) function
+            prevHealth = currentHealth
         }
     }
     //define snowboarder image
@@ -238,9 +199,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (weapon.y < this.y + this.height &&
                 weapon.y + weapon.height > this.y &&
                 weapon.x + weapon.width > this.x &&
-                weapon.x < this.x + this.width) {
-                this.health - 1
-                weapon.ingame = false
+                weapon.x < this.x + this.width &&
+                weapon.inGame === true) {
+                this.health -= 25
+                weapon.inGame = false
+                if (this.health <= 0) {
+                    skier.exp += this.value
+                }
             }
         }
         this.detectHit = () => {
@@ -262,6 +227,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 skier.points += this.points
                 skier.exp += this.value
 
+            }
+        }
+        this.gameLoop = () => {
+            //check if BadGuy is alive, move baddies, check for hits
+            if (badGuy.health > 0) {
+                badGuy.movement()
+                badGuy.render()
+                badGuy.detectJumpAttack()
+                badGuy.detectHit()
+                badGuy.detectWeapon()
+            } else {
+                // else spawn new baddy
+                killCount += 1
+                skier.hatersResolved += 1
+                badGuy = new Snowboarder(700 + Math.floor(Math.random() * 400), 275, Math.random()*20+5)
+            }
+            // of baddy runs off screen spawn new baddy
+            if (badGuy.x < -badGuy.width) {
+                badGuy = new Snowboarder(800, 275, Math.random()*20+5)
             }
         }
     }
@@ -296,9 +280,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (weapon.y < this.y + this.height &&
                 weapon.y + weapon.height > this.y &&
                 weapon.x + weapon.width > this.x &&
-                weapon.x < this.x + this.width) {
-                this.health - 1
-                weapon.ingame = false
+                weapon.x < this.x + this.width &&
+                weapon.inGame === true) {
+                this.health -= 25
+                weapon.inGame = false
+                if (this.health <= 0) {
+                    skier.exp += this.value
+                }
             }
         }
         // detect attack, bounce, get points
@@ -312,6 +300,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 skier.points += this.points
                 skier.exp += this.value
 
+            }
+        }
+        this.gameLoop = () => {
+            // add skiPatrol if over level 5
+            if (skier.level > 4 && badGuy2.health > 0) {
+                badGuy2.movement()
+                badGuy2.render()
+                badGuy2.detectJumpAttack()
+                badGuy2.detectHit()
+                badGuy2.detectWeapon()
+            } else if (skier.level > 4) {
+                killCount += 1
+                skier.hatersResolved += 1
+                badGuy2 = new SkiPatrol(600, 275, Math.random()*20+5)
+            }
+            // if badGuy2 runs off screen, run other way
+            if (badGuy2.x >= game.width || badGuy2.x < 10){
+                badGuy2.speed = badGuy2.speed * -1
             }
         }
     }
@@ -331,6 +337,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         this.movement = function () {
             this.x = this.x + this.speed
+        }
+        this.gameLoop = () => {
+            if (weapon.inGame === true) {
+            weapon.render()
+            weapon.movement()
+            }
+            // stop rendering weapon if off screen
+            if (weapon.x + weapon.width > game.width) {
+                weapon.inGame = false
+            }
         }
     }
     // game over function 
