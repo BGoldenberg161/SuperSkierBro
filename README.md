@@ -17,7 +17,14 @@ ____
 ## Music
 To tribute to the throwback feel. I went with a TonyHawk Pro Skater 1 song. Superman by Goldfinger
 ____
+## How to Play
+Move Left - A  
+Move Right - D  
+Jump - W  
+Throw Ski Pole - Space Bar
 
+Resolve haters by throwing ski poles and/or jumping on top of them. Experience points are randomly generated based on the enemies speed. Ski poles do half the damage of a jump. Snowboarders are resolved with 1 jump, ski patrol with 3 jumps and the yeti takes 5 jumps.... If you get there.
+____
 ## Blockers
 Working through the blockers is what makes writing code rewarding. In this project I certainly had my fair share.
 
