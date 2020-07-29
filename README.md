@@ -14,11 +14,14 @@ Project 1 General Assembly 713 Squad
 ## Concept
 I wanted to create a spin off of a classic, but I knew that one week is not a ton of time and I wanted to ensure I was happy with my final product so I picked something familiar. I went for an old school SuperMario feel where the player can jump on 'bad guys' to do damage while gaining experience points to level up. As I got my game working, I began to add more features like a weapon, as well as more game feedback such as high score tracking. 
 ____
+## Music
+To tribute to the throwback feel. I went with a TonyHawk Pro Skater 1 song. Superman by Goldfinger
+____
 
 ## Blockers
 Working through the blockers is what makes writing code rewarding. In this project I certainly had my fair share.
 
-#### Jump Attack
+### Jump Attack
 Working out the colision detection so that the player was delt damage if hitting an ememy from the side vs. doing damage to the enemy if colliding from the top. To accomplish this, I ended up using logic to define when only the very top of the enemy collides with the very bottom of the player.
 ``` javascript
 this.detectHit = () => {
@@ -32,7 +35,7 @@ this.detectHit = () => {
 ```
 I had to play with the x axis when referencing my skier because I didn't want the skis to do damage, just his feet. 
 
-#### Multiple Enemies
+### Multiple Enemies
 Having more than one enemy on the screen ment that I had to individually define each character with their own hitDetect functions for each case. So when I added my ski pole weapon, I also added a function for that. Below is the constructor function for my ski patroler:
 ```javascript
 const skiPatrolBro = document.createElement('img')
@@ -74,7 +77,6 @@ const skiPatrolBro = document.createElement('img')
                 }
             }
         }
-        // detect attack, bounce, get points
         this.detectJumpAttack = () => {
             if (this.y < skier.y + skier.height &&
                 skier.y + skier.height < this.y + 25 &&
@@ -89,8 +91,17 @@ const skiPatrolBro = document.createElement('img')
         }
     }
 ```
-To condense I kept the game loop function out of the object above. I moved this function into the object to clean up the main game loop and make it easier to read. Keeping all functionality relative to each character within it.
+To condense I kept the game loop function out of the object above. I moved this function into the object to clean up the main game loop and make it easier to read. Keeping all functionality relative to each character contained within it.
 
-
+### Character Images
+After searching for hours online for something resembling the characters I had in my mind, I changed paths and decided to draw my own! Althought this was a daunting task at first, I am mighty impressed with myself! The process was rather drawn out, but I love how it turned out so I will detail what happened for each character below:
+1. Draw them in pencil
+2. Give them a darker outline with a marker
+3. Take a picture phone
+4. Import to Gimp
+5. Cut out, color, and scale character
+____
+## Thanks for Playing!
+Any feedback is welcomed and appreciated. Feel free to fork and clone this repo. Although I am busy, I will periodically check in for any pull requests! I would love for this game to continue to improve over time, but at the very least...  Enjoy!
 
 
