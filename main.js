@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let skier = new Skier(325, 250)
     let badGuy = new Snowboarder(800, 275, Math.random()*15+5)
     let badGuy2 = new SkiPatrol(550, 275, Math.random()*15+5)
+    let weapon = new SkiPole(800, 800, false)
     // initialize music
     let music = new Sounds('./Audio/Superman-Goldfinger.mp3')
     const musicEle = document.querySelector('audio')
@@ -47,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
             badGuy.render()
             badGuy.detectJumpAttack()
             badGuy.detectHit()
+            badGuy.detectWeapon()
         } else {
             // else spawn new baddy
             killCount += 1
@@ -63,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
             badGuy2.render()
             badGuy2.detectJumpAttack()
             badGuy2.detectHit()
+            badGuy2.detectWeapon()
         } else if (skier.level > 4) {
             killCount += 1
             skier.hatersResolved += 1
@@ -87,6 +90,12 @@ document.addEventListener('DOMContentLoaded', () => {
             // turn skier red
         skierBro.setAttribute('src', './img/superSkierBro_2_150.png')
         }
+
+        if (weapon.inGame === true) {
+            weapon.render()
+            weapon.movement()
+        }
+
         prevHealth = currentHealth
         // render skierBro
         skier.render()
@@ -150,7 +159,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (skier.accl < 18 && skier.y >= game.height - skier.height)
                     skier.accl += 3
             case (32):// space - attack
-                let weapon = new skiPole(skier.x + 50, skier.y + 50)
+            if (weapon.inGame = false)    
+            weapon = new SkiPole(skier.x + 50, skier.y + 50, true)
             // defalut:
             //     console.log('invalid keystroke')
         }
@@ -224,6 +234,15 @@ document.addEventListener('DOMContentLoaded', () => {
         this.movement = function () {
             this.x = this.x - speed
         }
+        this.detectWeapon = () => {
+            if (weapon.y < this.y + this.height &&
+                weapon.y + weapon.height > this.y &&
+                weapon.x + weapon.width > this.x &&
+                weapon.x < this.x + this.width) {
+                this.health - 1
+                weapon.ingame = false
+            }
+        }
         this.detectHit = () => {
             if (skier.y < this.y + this.height &&
                 skier.y + skier.height > this.y &&
@@ -273,6 +292,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 doDamage(this.damage)
             }
         }
+        this.detectWeapon = () => {
+            if (weapon.y < this.y + this.height &&
+                weapon.y + weapon.height > this.y &&
+                weapon.x + weapon.width > this.x &&
+                weapon.x < this.x + this.width) {
+                this.health - 1
+                weapon.ingame = false
+            }
+        }
         // detect attack, bounce, get points
         this.detectJumpAttack = () => {
             if (this.y < skier.y + skier.height &&
@@ -290,18 +318,19 @@ document.addEventListener('DOMContentLoaded', () => {
      //define skiPatrol image
     const skiPole = document.createElement('img')
     skiPole.setAttribute('src', './img/skiPole_100.png')
-     function SkiPole(x, y) {
+     function SkiPole(x, y, ingame) {
         this.x = x
         this.y = y
-        this.speed = 20
+        this.speed = 25
         this.width = 100
         this.height = 20
-        this.inGame = true
+        this.damage = 25
+        this.inGame = ingame
         this.render = function () {
             ctx.drawImage(skiPole, this.x, this.y)
         }
         this.movement = function () {
-            this.x = this.x - 25
+            this.x = this.x + this.speed
         }
     }
     // game over function 
