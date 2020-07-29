@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let music = new Sounds('./Audio/Superman-Goldfinger.mp3')
     const musicEle = document.querySelector('audio')
     musicEle.volume = 0.05
-    
+    musicEle.loop = true
     // game variables
     let gravity = 4
     let killCount = 0
@@ -29,7 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentScore = 0
     let currentHealth = 100
     let prevHealth = 100
-
     // game loop
     const gameLoop = () => {
         //clear canvas
@@ -167,14 +166,13 @@ document.addEventListener('DOMContentLoaded', () => {
             currentHealth = skier.health
             // check if taking damage, if so, turn red
             if (currentHealth < prevHealth) {
-            // turn skier red
-            skierBro.setAttribute('src', './img/superSkierBro_2_150_red.png')
+                // turn skier red
+                skierBro.setAttribute('src', './img/superSkierBro_2_150_red.png')
             } else {
                 // turn skier red
-            skierBro.setAttribute('src', './img/superSkierBro_2_150.png')
+                skierBro.setAttribute('src', './img/superSkierBro_2_150.png')
             }
-
-            // track health for damage(red) function
+            // track health for damage function above
             prevHealth = currentHealth
         }
     }
@@ -206,6 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 weapon.inGame = false
                 if (this.health <= 0) {
                     skier.exp += this.value
+                    skier.points += this.points
                 }
             }
         }
@@ -287,6 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 weapon.inGame = false
                 if (this.health <= 0) {
                     skier.exp += this.value
+                    skier.points += this.points
                 }
             }
         }
@@ -427,8 +427,16 @@ document.addEventListener('DOMContentLoaded', () => {
         // log variables
         currentScore = skier.points
         currentHaters = skier.hatersResolved
+
+        // check storage for highscore
+        if (localStorage.getItem('highScore')) {
+            highScore = localStorage.getItem('highScore')
+        } else {
+            localStorage.setItem('highScore', 0)
+        }
+        // if current score is greater than high score, update
         if (currentScore > highScore) {
-            highScore = currentScore
+            localStorage.setItem('highScore', currentScore)
         }
 
         // stop game loop
@@ -451,12 +459,12 @@ document.addEventListener('DOMContentLoaded', () => {
         gameStats2.textContent = `You resolved ${currentHaters} haters this round`
         GameOverBlock.appendChild(gameStats2)
         // tell user if new high score/talk smack if not
-        if (currentScore < highScore) {
+        if (currentScore < localStorage.getItem('highScore')) {
             let gameStats3 = document.createElement('p')
             gameStats3.classList.add('stats')
             gameStats3.textContent = `IF YOU AIN'T FIRST, YOU LAST`
             GameOverBlock.appendChild(gameStats3)
-        } else if (currentScore == highScore) {
+        } else if (currentScore == localStorage.getItem('highScore')) {
             let gameStats3 = document.createElement('p')
             gameStats3.classList.add('stats')
             gameStats3.textContent = `NEW HIGH SCORE!!!`
@@ -465,7 +473,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // show high score
         let gameStats4 = document.createElement('p')
         gameStats4.classList.add('stats')
-        gameStats4.textContent = `High Score: ${highScore}`
+        gameStats4.textContent = `High Score: ${localStorage.getItem('highScore')}`
         GameOverBlock.appendChild(gameStats4)
         // restart button
         let restart = document.createElement('button')
