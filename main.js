@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         levelDisplay.innerText = `SkierBro Level: ${skier.level} \n Haters Resolved: ${killCount}`
         healthDisplay.innerText = `Health: \n ${skier.health}`
         pointsDisplay.innerText = `Points: ${skier.points} \n Exp: ${skier.exp}`
-
+        // run character game loops
         badGuy.gameLoop()
         badGuy2.gameLoop()
         weapon.gameLoop()
@@ -103,7 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
             case (65):// a - accelerate left 
                 if (skier.accl > -18 && skier.y >= game.height - skier.height)
                     skier.accl -= 3
-                // canvas.style.backgroundPositionX -= 10
                 break
             case (68):// d - accelerate right
                 if (skier.accl < 18 && skier.y >= game.height - skier.height)
@@ -466,6 +465,6 @@ document.addEventListener('keydown', movementHandler)
 // listen for pause button
 let pause = document.querySelector('.pause')
 pause.addEventListener('click', instructionsPause)
-// start game paused
+// start game then pause instantly to show instructions
 instructionsPause()
 })
