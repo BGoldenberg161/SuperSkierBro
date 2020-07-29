@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let skier = new Skier(325, 250)
     let badGuy = new Snowboarder(800, 275, Math.random()*15+5)
     let badGuy2 = new SkiPatrol(550, 275, Math.random()*15+5)
+    let badGuy3 = new Yeti(600, 275, Math.random()*15+5)
     let weapon = new SkiPole(800, 800, false)
     // initialize music
     let music = new Sounds('./Audio/Superman-Goldfinger.mp3')
@@ -45,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // run character game loops
         badGuy.gameLoop()
         badGuy2.gameLoop()
+        badGuy3.gameLoop()
         weapon.gameLoop()
         skier.gameLoop()
         // render skierBro
@@ -348,6 +350,78 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
+    //define skiPatrol image
+    const yetiBro = document.createElement('img')
+    yetiBro.setAttribute('src', './img/yeti_100.png')
+    function Yeti(x, y, speed) {
+        this.x = x
+        this.y = y
+        this.speed = 10
+        this.points = 250
+        this.damage = 4
+        this.value = Math.floor(Math.random() * speed * 5 + 50)
+        this.health = 250
+        this.width = 80
+        this.height = 100
+        this.render = function () {
+            ctx.drawImage(yetiBro, this.x, this.y)
+        }
+        this.movement = function () {
+            this.x = this.x + this.speed
+        }
+        this.detectHit = () => {
+            if (skier.y < this.y + this.height &&
+                skier.y + skier.height > this.y &&
+                skier.x + skier.width - 40 > this.x &&
+                skier.x + 60 < this.x + this.width) {
+                doDamage(this.damage)
+            }
+        }
+        this.detectWeapon = () => {
+            if (weapon.y < this.y + this.height &&
+                weapon.y + weapon.height > this.y &&
+                weapon.x + weapon.width > this.x &&
+                weapon.x < this.x + this.width &&
+                weapon.inGame === true) {
+                this.health -= 25
+                weapon.inGame = false
+                if (this.health <= 0) {
+                    skier.exp += this.value
+                }
+            }
+        }
+        // detect attack, bounce, get points
+        this.detectJumpAttack = () => {
+            if (this.y < skier.y + skier.height &&
+                skier.y + skier.height < this.y + 25 &&
+                skier.x + skier.width - 40 > this.x &&
+                skier.x + 40 < this.x + this.width) {
+                skier.y -= 70
+                this.health -= 50
+                skier.points += this.points
+                skier.exp += this.value
+
+            }
+        }
+        this.gameLoop = () => {
+            // add yeti if level 10
+            if (skier.level > 9 && badGuy3.health > 0) {
+                badGuy3.movement()
+                badGuy3.render()
+                badGuy3.detectJumpAttack()
+                badGuy3.detectHit()
+                badGuy3.detectWeapon()
+            } else if (skier.level > 9) {
+                killCount += 1
+                skier.hatersResolved += 1
+                badGuy3 = new Yeti(10, 300, Math.random()*15+20)
+            }
+            // if badGuy3 runs off screen, run other way
+            if (badGuy3.x >= game.width || badGuy3.x < 10){
+                badGuy3.speed = badGuy3.speed * -1
+            }
+        }
+    }
     // game over function 
     function gameOver() {
         // log variables
@@ -429,7 +503,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // give stats
         let gameKeys = document.createElement('p')
         gameKeys.classList.add('keys')
-        gameKeys.innerText = 'Move with: A & D \n Jump with: W'
+        gameKeys.innerText = 'Move with: A & D \n Jump with: W \n Throw Ski Pole: Space'
         instructionsBlock.appendChild(gameKeys)
         let gameQuote = document.createElement('p')
         gameQuote.classList.add('quote')
