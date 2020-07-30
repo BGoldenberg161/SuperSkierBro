@@ -111,6 +111,6 @@ ____
 Any feedback is welcomed and appreciated. Feel free to fork and clone this repo. Although I am busy, I will periodically check in for any pull requests! I would love for this game to continue to improve over time, but at the very least...  Enjoy!
 
 ### Shoutouts
-Thanks to the Shit Skiers Say youtube video for the bro sound effect, and to Get Safe! by Camp Gnartron for the ski patrol and yeti voices.
+Thanks to the Shit Skiers Say youtube video for the bro sound effect, and to Get Safe! by Camp Gnartron for the ski patrol and yeti voices. And obviously mucho thanks to the many classmates for the creative ideas!!
 
 
