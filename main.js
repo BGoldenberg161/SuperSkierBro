@@ -17,10 +17,26 @@ document.addEventListener('DOMContentLoaded', () => {
     let badGuy3 = new Yeti(600, 275, Math.random()*15+5)
     let weapon = new SkiPole(800, 800, false)
     // initialize music
-    let music = new Sounds('./Audio/Superman-Goldfinger.mp3')
-    const musicEle = document.querySelector('audio')
+    let music = new Sounds('./Audio/Superman-Goldfinger.mp3', 'one')
+    const musicEle = document.querySelector('.one')
     musicEle.volume = 0.05
     musicEle.loop = true
+    // initialize bro sound
+    let broSound = new Sounds('./Audio/bro.mp3', 'two')
+    const broEle = document.querySelector('.two')
+    broEle.volume = 0.15
+    // initialize patrol sound
+    let patrolSound = new Sounds('./Audio/safetySafety.mp3', 'three')
+    const patrolEle = document.querySelector('.three')
+    patrolEle.volume = 0.15
+    // initialize yeti sound
+    let yetiSound = new Sounds('./Audio/cantDoThat.mp3', 'four')
+    const yetiEle = document.querySelector('.four')
+    yetiEle.volume = 0.15
+    // initialize boing sound
+    let boingSound = new Sounds('./Audio/boing.mp3', 'five')
+    const boingEle = document.querySelector('.five')
+    boingEle.volume = 0.15
     // game variables
     let gravity = 4
     let killCount = 0
@@ -123,18 +139,19 @@ document.addEventListener('DOMContentLoaded', () => {
         skier.health = skier.health - damage
     }
     // sounds object
-    function Sounds(src) {
-        this.sound = document.createElement('audio');
-        this.sound.src = src;
-        this.sound.setAttribute('preload', 'auto');
-        this.sound.setAttribute('controls', 'none');
-        this.sound.style.display = 'none';
-        body.appendChild(this.sound);
+    function Sounds(src, classname) {
+        this.sound = document.createElement('audio')
+        this.sound.classList.add(classname)
+        this.sound.src = src
+        this.sound.setAttribute('preload', 'auto')
+        this.sound.setAttribute('controls', 'none')
+        this.sound.style.display = 'none'
+        body.appendChild(this.sound)
         this.play = function(){
-          this.sound.play();
+          this.sound.play()
         }
         this.stop = function(){
-          this.sound.pause();
+          this.sound.pause()
         }
     }
     //define skierBro image
@@ -202,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 weapon.inGame === true) {
                 this.health -= 25
                 weapon.inGame = false
+                boingSound.play()
                 if (this.health <= 0) {
                     skier.exp += this.value
                     skier.points += this.points
@@ -226,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.health -= 50
                 skier.points += this.points
                 skier.exp += this.value
-
+                broSound.play()
             }
         }
         this.gameLoop = () => {
@@ -284,6 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 weapon.inGame === true) {
                 this.health -= 25
                 weapon.inGame = false
+                boingSound.play()
                 if (this.health <= 0) {
                     skier.exp += this.value
                     skier.points += this.points
@@ -300,7 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.health -= 50
                 skier.points += this.points
                 skier.exp += this.value
-
+                patrolSound.play()
             }
         }
         this.gameLoop = () => {
@@ -385,6 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 weapon.inGame === true) {
                 this.health -= 25
                 weapon.inGame = false
+                boingSound.play()
                 if (this.health <= 0) {
                     skier.exp += this.value
                 }
@@ -400,7 +420,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.health -= 50
                 skier.points += this.points
                 skier.exp += this.value
-
+                yetiSound.play()
             }
         }
         this.gameLoop = () => {
@@ -539,7 +559,6 @@ document.addEventListener('DOMContentLoaded', () => {
         music.play()
     }
     
-
 // set game speed  && run game
 let runGame = setInterval(gameLoop, 60)
 //listen for key inputs

@@ -93,14 +93,13 @@ const skiPatrolBro = document.createElement('img')
                 this.health -= 50
                 skier.points += this.points
                 skier.exp += this.value
-
             }
         }
     }
 ```
 To condense I kept the game loop function out of the object above. I moved this function into the object to clean up the main game loop and make it easier to read. Keeping all functionality relative to each character contained within it.
 
-### Character Images
+### Character and Background Images
 After searching for hours online for something resembling the characters I had in my mind, I changed paths and decided to draw my own! Althought this was a daunting task at first, I am mighty impressed with myself! The process was rather drawn out, but I love how it turned out so I will detail what happened for each character below:
 1. Draw them in pencil
 2. Give them a darker outline with a marker
@@ -110,5 +109,8 @@ After searching for hours online for something resembling the characters I had i
 ____
 ## Thanks for Playing!
 Any feedback is welcomed and appreciated. Feel free to fork and clone this repo. Although I am busy, I will periodically check in for any pull requests! I would love for this game to continue to improve over time, but at the very least...  Enjoy!
+
+### Shoutouts
+Thanks to the Shit Skiers Say youtube video for the bro sound effect, and to Get Safe! by Camp Gnartron for the ski patrol and yeti voices.
 
 
