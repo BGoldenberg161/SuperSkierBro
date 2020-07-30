@@ -24,6 +24,8 @@ Jump - W
 Throw Ski Pole - Space Bar
 
 Resolve haters by throwing ski poles and/or jumping on top of them. Experience points are randomly generated based on the enemies speed. Ski poles do half the damage of a jump. Snowboarders are resolved with 1 jump, ski patrol with 3 jumps and the yeti takes 5 jumps.... If you get there.
+
+Deployed with github here: [SuperSkierBro](https://bgoldenberg161.github.io/SuperSkierBro/)
 ____
 ## Blockers
 Working through the blockers is what makes writing code rewarding. In this project I certainly had my fair share.
@@ -109,8 +111,11 @@ After searching for hours online for something resembling the characters I had i
 ____
 ## Thanks for Playing!
 Any feedback is welcomed and appreciated. Feel free to fork and clone this repo. Although I am busy, I will periodically check in for any pull requests! I would love for this game to continue to improve over time, but at the very least...  Enjoy!
+____
+## Author
+* Branden Goldenberg - Initial creator
+* Would love to add more names below!
 
 ### Shoutouts
 Thanks to the Shit Skiers Say youtube video for the bro sound effect, and to Get Safe! by Camp Gnartron for the ski patrol and yeti voices. And obviously mucho thanks to the many classmates for the creative ideas!!
-
 
