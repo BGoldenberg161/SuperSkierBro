@@ -45,14 +45,14 @@ this.detectHit = () => {
 I had to play with the x axis when referencing my skier because I didn't want the skis to do damage, just his feet. 
 
 ### Multiple Enemies
-Having more than one enemy on the screen ment that I had to individually define each character with their own hitDetect functions for each case. So when I added my ski pole weapon, I also added a function for that. Below is the constructor function for my ski patroler:
+Having more than one type of enemy on the screen at once forced me to individually define each character with their own hitDetect functions for each case. So when I added my ski pole weapon, I also added a function for that. Below is the constructor function for my ski patroler:
 ```javascript
 const skiPatrolBro = document.createElement('img')
     skiPatrolBro.setAttribute('src', './img/skiPatrol_125.png')
     function SkiPatrol(x, y, speed) {
         this.x = x
         this.y = y
-        this.speed = 10
+        this.speed = speed
         this.points = 25
         this.damage = 3
         this.value = Math.floor(Math.random() * speed * 3 + 10)

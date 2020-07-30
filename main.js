@@ -273,7 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function SkiPatrol(x, y, speed) {
         this.x = x
         this.y = y
-        this.speed = 10
+        this.speed = speed
         this.points = 25
         this.damage = 3
         this.value = Math.floor(Math.random() * speed * 3 + 10)
@@ -375,7 +375,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function Yeti(x, y, speed) {
         this.x = x
         this.y = y
-        this.speed = 10
+        this.speed = speed
         this.points = 250
         this.damage = 4
         this.value = Math.floor(Math.random() * speed * 5 + 50)
